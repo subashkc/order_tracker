@@ -1,6 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'mongoid-rspec'
+require 'database_cleaner'
 
 ENV['RAILS_ENV'] ||= 'test'
 
@@ -63,4 +64,19 @@ RSpec.configure do |config|
 
   # add facotry girl rails methods
   config.include FactoryGirl::Syntax::Methods
+
+  # database cleaner
+  config.before(:suite) do
+    DatabaseCleaner[:mongoid].strategy = :truncation
+    DatabaseCleaner[:mongoid].clean
+  end
+
+  config.before(:all) do
+    DatabaseCleaner[:mongoid].start
+  end
+
+  config.after(:all) do
+    DatabaseCleaner[:mongoid].clean
+  end
+
 end
